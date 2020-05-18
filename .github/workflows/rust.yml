@@ -13,7 +13,25 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Cache
+      - name: Cache cargo registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-registry-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/Cargo.lock')) }}
+          restore-keys:
+            ${{ runner.os }}-registry-${{ env.cache-name }}-
+            ${{ runner.os }}-registry-
+
+      - name: Cache cargo index
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/git
+          key: ${{ runner.os }}-index-${{ env.cache-name }}-${{ hashFiles(format('{0}{1}', github.workspace, '/Cargo.lock')) }}
+          restore-keys:
+            ${{ runner.os }}-index-${{ env.cache-name }}-
+            ${{ runner.os }}-index-
+
+      - name: Cache cargo build
         uses: actions/cache@v1
         env:
           cache-name: cargo-target
@@ -23,7 +41,6 @@ jobs:
           restore-keys:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
-            ${{ runner.os }}-
 
       - name: Build
         run: cargo build --verbose
