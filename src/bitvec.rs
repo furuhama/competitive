@@ -53,6 +53,14 @@ impl Iterator for BitVec {
     }
 }
 
+impl std::ops::Index<usize> for BitVec {
+    type Output = bool;
+
+    fn index(&self, idx: usize) -> &Self::Output {
+        &self.data[idx]
+    }
+}
+
 pub trait ReadAs<T> {
     fn read_as(&self) -> T;
 }
@@ -234,5 +242,18 @@ mod tests {
     #[test]
     fn test_read_as_u64() {
         read_as_test!(u64);
+    }
+
+    #[test]
+    fn test_index() {
+        let bv = BitVec::from(1u8);
+        assert_eq!(bv[0], true);
+        assert_eq!(bv[1], false);
+        assert_eq!(bv[2], false);
+        assert_eq!(bv[3], false);
+        assert_eq!(bv[4], false);
+        assert_eq!(bv[5], false);
+        assert_eq!(bv[6], false);
+        assert_eq!(bv[7], false);
     }
 }
