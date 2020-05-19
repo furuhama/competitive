@@ -3,7 +3,7 @@ const MOD: u32 = 1_000_000_007;
 
 #[derive(Clone, Copy)]
 pub struct ModInt {
-    pub value: u32,
+    value: u32,
 }
 
 impl std::ops::Add for ModInt {
@@ -112,6 +112,10 @@ impl ModInt {
     pub fn inv(self) -> ModInt {
         assert!(self.value > 0);
         self.pow(MOD - 2)
+    }
+
+    pub fn value(&self) -> u32 {
+        self.value
     }
 }
 
@@ -271,5 +275,17 @@ mod tests {
         let l = ModInt::new(500_000_004);
         let ans = l.inv();
         assert_eq!(ans.value, 2);
+    }
+
+    #[test]
+    fn test_value() {
+        let m = ModInt::new(1);
+        assert_eq!(m.value(), 1);
+
+        let m = ModInt::new(MOD);
+        assert_eq!(m.value(), 0);
+
+        let m = ModInt::new(MOD - 1);
+        assert_eq!(m.value(), 1_000_000_006);
     }
 }
