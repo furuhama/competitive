@@ -1,29 +1,14 @@
-// MOD should be a prime number
-const MOD: u32 = 1_000_000_007;
-
 #[derive(Clone, Copy)]
 pub struct ModInt {
     value: u32,
-    modulus: u32,
-}
-
-impl Default for ModInt {
-    fn default() -> Self {
-        Self {
-            value: 0,
-            // to change modulus, rewrite this value
-            // (modulus should be a prime number)
-            modulus: 1_000_000_007,
-        }
-    }
 }
 
 impl std::ops::Add for ModInt {
     type Output = ModInt;
     fn add(self, rhs: ModInt) -> Self::Output {
         let mut d = self.value + rhs.value;
-        if d >= MOD {
-            d -= MOD;
+        if d >= Self::MODULUS {
+            d -= Self::MODULUS;
         }
         ModInt::new(d)
     }
@@ -38,9 +23,9 @@ impl std::ops::AddAssign for ModInt {
 impl std::ops::Sub for ModInt {
     type Output = ModInt;
     fn sub(self, rhs: ModInt) -> Self::Output {
-        let mut d = self.value + MOD - rhs.value;
-        if d >= MOD {
-            d -= MOD;
+        let mut d = self.value + Self::MODULUS - rhs.value;
+        if d >= Self::MODULUS {
+            d -= Self::MODULUS;
         }
         ModInt::new(d)
     }
@@ -55,7 +40,7 @@ impl std::ops::SubAssign for ModInt {
 impl std::ops::Mul for ModInt {
     type Output = ModInt;
     fn mul(self, rhs: ModInt) -> Self::Output {
-        let d = self.value as u64 * rhs.value as u64 % MOD as u64;
+        let d = self.value as u64 * rhs.value as u64 % Self::MODULUS as u64;
 
         ModInt::new(d as u32)
     }
@@ -73,7 +58,7 @@ impl std::ops::Neg for ModInt {
     fn neg(self) -> Self::Output {
         let d = match self.value {
             0 => 0,
-            _ => MOD - self.value,
+            _ => Self::MODULUS - self.value,
         };
 
         ModInt::new(d)
@@ -87,8 +72,8 @@ impl std::fmt::Display for ModInt {
 }
 
 impl From<usize> for ModInt {
-    fn from(val: usize) -> ModInt {
-        let d = (val % MOD as usize) as u32;
+    fn from(val: usize) -> Self {
+        let d = (val % Self::MODULUS as usize) as u32;
 
         ModInt::new(d)
     }
@@ -96,10 +81,13 @@ impl From<usize> for ModInt {
 
 #[allow(dead_code)]
 impl ModInt {
+    // to change modulus, rewrite this value
+    // (modulus should be a prime number)
+    pub const MODULUS: u32 = 1_000_000_007;
+
     pub fn new(n: u32) -> Self {
         Self {
-            value: n % MOD,
-            ..Default::default()
+            value: n % Self::MODULUS,
         }
     }
 
@@ -126,15 +114,11 @@ impl ModInt {
 
     pub fn inv(self) -> ModInt {
         assert!(self.value > 0);
-        self.pow(MOD - 2)
+        self.pow(Self::MODULUS - 2)
     }
 
     pub fn value(&self) -> u32 {
         self.value
-    }
-
-    pub fn modulus(&self) -> u32 {
-        self.modulus
     }
 }
 
@@ -149,7 +133,7 @@ mod tests {
         let ans = l + r;
         assert_eq!(ans.value, 25);
 
-        let l = ModInt::new(MOD - 10);
+        let l = ModInt::new(ModInt::MODULUS - 10);
         let r = ModInt::new(15);
         let ans = l + r;
         assert_eq!(ans.value, 5);
@@ -162,7 +146,7 @@ mod tests {
         l += r;
         assert_eq!(l.value, 25);
 
-        let mut l = ModInt::new(MOD - 10);
+        let mut l = ModInt::new(ModInt::MODULUS - 10);
         let r = ModInt::new(15);
         l += r;
         assert_eq!(l.value, 5);
@@ -175,15 +159,15 @@ mod tests {
         let ans = l - r;
         assert_eq!(ans.value, 5);
 
-        let l = ModInt::new(MOD - 10);
-        let r = ModInt::new(MOD - 15);
+        let l = ModInt::new(ModInt::MODULUS - 10);
+        let r = ModInt::new(ModInt::MODULUS - 15);
         let ans = l - r;
         assert_eq!(ans.value, 5);
 
-        let l = ModInt::new(MOD - 15);
-        let r = ModInt::new(MOD - 10);
+        let l = ModInt::new(ModInt::MODULUS - 15);
+        let r = ModInt::new(ModInt::MODULUS - 10);
         let ans = l - r;
-        assert_eq!(ans.value, MOD - 5);
+        assert_eq!(ans.value, ModInt::MODULUS - 5);
     }
 
     #[test]
@@ -193,15 +177,15 @@ mod tests {
         l -= r;
         assert_eq!(l.value, 5);
 
-        let mut l = ModInt::new(MOD - 10);
-        let r = ModInt::new(MOD - 15);
+        let mut l = ModInt::new(ModInt::MODULUS - 10);
+        let r = ModInt::new(ModInt::MODULUS - 15);
         l -= r;
         assert_eq!(l.value, 5);
 
-        let mut l = ModInt::new(MOD - 15);
-        let r = ModInt::new(MOD - 10);
+        let mut l = ModInt::new(ModInt::MODULUS - 15);
+        let r = ModInt::new(ModInt::MODULUS - 10);
         l -= r;
-        assert_eq!(l.value, MOD - 5);
+        assert_eq!(l.value, ModInt::MODULUS - 5);
     }
 
     #[test]
@@ -211,8 +195,8 @@ mod tests {
         let ans = l * r;
         assert_eq!(ans.value, 50);
 
-        let l = ModInt::new(MOD - 5);
-        let r = ModInt::new(MOD - 10);
+        let l = ModInt::new(ModInt::MODULUS - 5);
+        let r = ModInt::new(ModInt::MODULUS - 10);
         let ans = l * r;
         assert_eq!(ans.value, 50);
     }
@@ -224,8 +208,8 @@ mod tests {
         l *= r;
         assert_eq!(l.value, 50);
 
-        let mut l = ModInt::new(MOD - 5);
-        let r = ModInt::new(MOD - 10);
+        let mut l = ModInt::new(ModInt::MODULUS - 5);
+        let r = ModInt::new(ModInt::MODULUS - 10);
         l *= r;
         assert_eq!(l.value, 50);
     }
@@ -238,19 +222,22 @@ mod tests {
 
         let v = ModInt::new(100);
         let ans = -v;
-        assert_eq!(ans.value, MOD - 100);
+        assert_eq!(ans.value, ModInt::MODULUS - 100);
     }
 
     #[test]
     fn test_format() {
         assert_eq!(format!("{}", ModInt::new(1)), "1");
-        assert_eq!(format!("{}", ModInt::new(MOD - 1)), "1000000006");
+        assert_eq!(
+            format!("{}", ModInt::new(ModInt::MODULUS - 1)),
+            "1000000006"
+        );
     }
 
     #[test]
     fn test_from_usize() {
         assert_eq!(ModInt::from(500).value, 500);
-        assert_eq!(ModInt::from((MOD + 1) as usize).value, 1);
+        assert_eq!(ModInt::from((ModInt::MODULUS + 1) as usize).value, 1);
         assert_eq!(ModInt::from(std::u32::MAX as usize + 1).value, 294_967_268);
     }
 
@@ -301,22 +288,10 @@ mod tests {
         let m = ModInt::new(1);
         assert_eq!(m.value(), 1);
 
-        let m = ModInt::new(MOD);
+        let m = ModInt::new(ModInt::MODULUS);
         assert_eq!(m.value(), 0);
 
-        let m = ModInt::new(MOD - 1);
+        let m = ModInt::new(ModInt::MODULUS - 1);
         assert_eq!(m.value(), 1_000_000_006);
-    }
-
-    #[test]
-    fn test_modulus() {
-        let m = ModInt::new(1);
-        assert_eq!(m.modulus(), 1_000_000_007);
-
-        let m = ModInt {
-            value: 0,
-            modulus: 5,
-        };
-        assert_eq!(m.modulus(), 5);
     }
 }
