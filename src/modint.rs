@@ -79,6 +79,18 @@ impl From<usize> for ModInt {
     }
 }
 
+impl PartialEq<Self> for ModInt {
+    fn eq(&self, other: &Self) -> bool {
+        self.value == other.value
+    }
+}
+
+impl PartialEq<u32> for ModInt {
+    fn eq(&self, other: &u32) -> bool {
+        self.value == *other
+    }
+}
+
 #[allow(dead_code)]
 impl ModInt {
     // to change modulus, rewrite this value
@@ -239,6 +251,18 @@ mod tests {
         assert_eq!(ModInt::from(500).value, 500);
         assert_eq!(ModInt::from((ModInt::MODULUS + 1) as usize).value, 1);
         assert_eq!(ModInt::from(std::u32::MAX as usize + 1).value, 294_967_268);
+    }
+
+    #[test]
+    fn test_partial_eq_self() {
+        assert!(ModInt::new(10) == ModInt::new(10));
+        assert!(ModInt::new(10) != ModInt::new(7));
+    }
+
+    #[test]
+    fn test_partial_eq_u32() {
+        assert!(ModInt::new(10) == 10);
+        assert!(ModInt::new(10) != 7);
     }
 
     #[test]
