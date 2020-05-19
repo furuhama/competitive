@@ -13,7 +13,7 @@ impl std::ops::Add for ModInt {
         if d >= MOD {
             d -= MOD;
         }
-        ModInt { value: d }
+        ModInt::new(d)
     }
 }
 
@@ -30,7 +30,7 @@ impl std::ops::Sub for ModInt {
         if d >= MOD {
             d -= MOD;
         }
-        ModInt { value: d }
+        ModInt::new(d)
     }
 }
 
@@ -45,7 +45,7 @@ impl std::ops::Mul for ModInt {
     fn mul(self, rhs: ModInt) -> Self::Output {
         let d = self.value as u64 * rhs.value as u64 % MOD as u64;
 
-        ModInt { value: d as u32 }
+        ModInt::new(d as u32)
     }
 }
 
@@ -64,7 +64,7 @@ impl std::ops::Neg for ModInt {
             _ => MOD - self.value,
         };
 
-        ModInt { value: d }
+        ModInt::new(d)
     }
 }
 
@@ -76,9 +76,9 @@ impl std::fmt::Display for ModInt {
 
 impl From<usize> for ModInt {
     fn from(val: usize) -> ModInt {
-        ModInt {
-            value: (val % MOD as usize) as u32,
-        }
+        let d = (val % MOD as usize) as u32;
+
+        ModInt::new(d)
     }
 }
 
@@ -121,107 +121,107 @@ mod tests {
 
     #[test]
     fn test_add() {
-        let l = ModInt { value: 10 };
-        let r = ModInt { value: 15 };
+        let l = ModInt::new(10);
+        let r = ModInt::new(15);
         let ans = l + r;
         assert_eq!(ans.value, 25);
 
-        let l = ModInt { value: MOD - 10 };
-        let r = ModInt { value: 15 };
+        let l = ModInt::new(MOD - 10);
+        let r = ModInt::new(15);
         let ans = l + r;
         assert_eq!(ans.value, 5);
     }
 
     #[test]
     fn test_add_assign() {
-        let mut l = ModInt { value: 10 };
-        let r = ModInt { value: 15 };
+        let mut l = ModInt::new(10);
+        let r = ModInt::new(15);
         l += r;
         assert_eq!(l.value, 25);
 
-        let mut l = ModInt { value: MOD - 10 };
-        let r = ModInt { value: 15 };
+        let mut l = ModInt::new(MOD - 10);
+        let r = ModInt::new(15);
         l += r;
         assert_eq!(l.value, 5);
     }
 
     #[test]
     fn test_sub() {
-        let l = ModInt { value: 15 };
-        let r = ModInt { value: 10 };
+        let l = ModInt::new(15);
+        let r = ModInt::new(10);
         let ans = l - r;
         assert_eq!(ans.value, 5);
 
-        let l = ModInt { value: MOD - 10 };
-        let r = ModInt { value: MOD - 15 };
+        let l = ModInt::new(MOD - 10);
+        let r = ModInt::new(MOD - 15);
         let ans = l - r;
         assert_eq!(ans.value, 5);
 
-        let l = ModInt { value: MOD - 15 };
-        let r = ModInt { value: MOD - 10 };
+        let l = ModInt::new(MOD - 15);
+        let r = ModInt::new(MOD - 10);
         let ans = l - r;
         assert_eq!(ans.value, MOD - 5);
     }
 
     #[test]
     fn test_sub_assign() {
-        let mut l = ModInt { value: 15 };
-        let r = ModInt { value: 10 };
+        let mut l = ModInt::new(15);
+        let r = ModInt::new(10);
         l -= r;
         assert_eq!(l.value, 5);
 
-        let mut l = ModInt { value: MOD - 10 };
-        let r = ModInt { value: MOD - 15 };
+        let mut l = ModInt::new(MOD - 10);
+        let r = ModInt::new(MOD - 15);
         l -= r;
         assert_eq!(l.value, 5);
 
-        let mut l = ModInt { value: MOD - 15 };
-        let r = ModInt { value: MOD - 10 };
+        let mut l = ModInt::new(MOD - 15);
+        let r = ModInt::new(MOD - 10);
         l -= r;
         assert_eq!(l.value, MOD - 5);
     }
 
     #[test]
     fn test_mul() {
-        let l = ModInt { value: 5 };
-        let r = ModInt { value: 10 };
+        let l = ModInt::new(5);
+        let r = ModInt::new(10);
         let ans = l * r;
         assert_eq!(ans.value, 50);
 
-        let l = ModInt { value: MOD - 5 };
-        let r = ModInt { value: MOD - 10 };
+        let l = ModInt::new(MOD - 5);
+        let r = ModInt::new(MOD - 10);
         let ans = l * r;
         assert_eq!(ans.value, 50);
     }
 
     #[test]
     fn test_mul_assign() {
-        let mut l = ModInt { value: 5 };
-        let r = ModInt { value: 10 };
+        let mut l = ModInt::new(5);
+        let r = ModInt::new(10);
         l *= r;
         assert_eq!(l.value, 50);
 
-        let mut l = ModInt { value: MOD - 5 };
-        let r = ModInt { value: MOD - 10 };
+        let mut l = ModInt::new(MOD - 5);
+        let r = ModInt::new(MOD - 10);
         l *= r;
         assert_eq!(l.value, 50);
     }
 
     #[test]
     fn test_neg() {
-        let v = ModInt { value: 0 };
+        let v = ModInt::new(0);
         let ans = -v;
         assert_eq!(ans.value, 0);
 
-        let v = ModInt { value: 100 };
+        let v = ModInt::new(100);
         let ans = -v;
         assert_eq!(ans.value, MOD - 100);
     }
 
     #[test]
     fn test_format() {
-        assert_eq!(format!("{}", ModInt { value: 1 }), "1");
-        assert_eq!(format!("{}", ModInt { value: MOD }), "1000000007");
+        assert_eq!(format!("{}", ModInt::new(1)), "1");
+        assert_eq!(format!("{}", ModInt::new(MOD - 1)), "1000000006");
     }
 
     #[test]
