@@ -4,6 +4,18 @@ const MOD: u32 = 1_000_000_007;
 #[derive(Clone, Copy)]
 pub struct ModInt {
     value: u32,
+    modulus: u32,
+}
+
+impl Default for ModInt {
+    fn default() -> Self {
+        Self {
+            value: 0,
+            // to change modulus, rewrite this value
+            // (modulus should be a prime number)
+            modulus: 1_000_000_007,
+        }
+    }
 }
 
 impl std::ops::Add for ModInt {
@@ -85,15 +97,18 @@ impl From<usize> for ModInt {
 #[allow(dead_code)]
 impl ModInt {
     pub fn new(n: u32) -> Self {
-        Self { value: n % MOD }
+        Self {
+            value: n % MOD,
+            ..Default::default()
+        }
     }
 
     pub fn zero() -> ModInt {
-        Self { value: 0 }
+        Self::new(0)
     }
 
     pub fn one() -> ModInt {
-        Self { value: 1 }
+        Self::new(1)
     }
 
     pub fn pow(self, mut n: u32) -> ModInt {
@@ -116,6 +131,10 @@ impl ModInt {
 
     pub fn value(&self) -> u32 {
         self.value
+    }
+
+    pub fn modulus(&self) -> u32 {
+        self.modulus
     }
 }
 
@@ -287,5 +306,17 @@ mod tests {
 
         let m = ModInt::new(MOD - 1);
         assert_eq!(m.value(), 1_000_000_006);
+    }
+
+    #[test]
+    fn test_modulus() {
+        let m = ModInt::new(1);
+        assert_eq!(m.modulus(), 1_000_000_007);
+
+        let m = ModInt {
+            value: 0,
+            modulus: 5,
+        };
+        assert_eq!(m.modulus(), 5);
     }
 }
