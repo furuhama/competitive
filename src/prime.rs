@@ -65,20 +65,20 @@ mod tests {
 
     #[test]
     fn test_prime_factors() {
-        let pattern = vec![
+        vec![
             (12, vec![(2, 2), (3, 1)]),
             (1024, vec![(2, 10)]),
             (1, vec![]),
             (17, vec![(17, 1)]),
-        ];
-
-        for (n, factors) in pattern {
+        ]
+        .into_iter()
+        .for_each(|(n, factors)| {
             let pf = prime_factors(n);
             let mut ans = std::collections::HashMap::new();
             for (p, k) in factors {
                 ans.insert(p, k);
             }
             assert_eq!(pf, ans);
-        }
+        });
     }
 }
