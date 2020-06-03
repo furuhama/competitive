@@ -1,4 +1,4 @@
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct ModInt {
     value: u32,
 }
@@ -103,16 +103,8 @@ impl ModInt {
         }
     }
 
-    pub fn zero() -> ModInt {
-        Self::new(0)
-    }
-
-    pub fn one() -> ModInt {
-        Self::new(1)
-    }
-
     pub fn pow(self, mut n: u32) -> ModInt {
-        let mut t = ModInt::one();
+        let mut t = ModInt::new(1);
         let mut s = self;
         while n > 0 {
             if n & 1 == 1 {
@@ -269,16 +261,6 @@ mod tests {
     fn test_new() {
         assert_eq!(ModInt::new(10).value, 10);
         assert_eq!(ModInt::new(std::u32::MAX).value, 294_967_267);
-    }
-
-    #[test]
-    fn test_zero() {
-        assert_eq!(ModInt::zero().value, 0);
-    }
-
-    #[test]
-    fn test_one() {
-        assert_eq!(ModInt::one().value, 1);
     }
 
     #[test]
