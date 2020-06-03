@@ -1,4 +1,4 @@
-use competitive::modint::*;
+use competitive::mint::*;
 
 fn main() {
     let m = Mint::new(10);
