@@ -1,8 +1,35 @@
+pub fn binary_search<
+    T: std::ops::Add<Output = T> + std::ops::Div<Output = T> + PartialEq + From<u8> + Copy,
+>(
+    lower: T,
+    upper: T,
+    proc: impl Fn(T) -> bool,
+) -> T {
+    let mut lower = lower;
+    let mut upper = upper;
+
+    let div = T::from(2);
+
+    loop {
+        let mid = (lower + upper) / div;
+        if lower == mid || mid == upper {
+            break mid;
+        }
+
+        if proc(mid) {
+            lower = mid;
+        } else {
+            upper = mid;
+        }
+    }
+}
+
 pub trait BinarySearchable<T> {
     fn lower_bound(&self, x: &T) -> usize;
     fn upper_bound(&self, x: &T) -> usize;
 }
 
+// allows binary_search for Slice
 impl<T: Ord> BinarySearchable<T> for [T] {
     fn lower_bound(&self, x: &T) -> usize {
         let mut left = 0;
@@ -44,6 +71,16 @@ impl<T: Ord> BinarySearchable<T> for [T] {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_binary_search() {
+        let v = vec![1, 2, 3, 4, 5, 6];
+        let ans = binary_search(0, v.len(), |idx| v[idx] < 4);
+        assert_eq!(ans, 2);
+
+        let ans = binary_search(0.0, 100.0, |f| f * f < 49.0);
+        assert_eq!(ans, 7.0);
+    }
 
     #[test]
     fn test_vec_lower_bound() {
