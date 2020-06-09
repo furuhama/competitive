@@ -32,39 +32,39 @@ pub trait BinarySearchable<T> {
 // allows binary_search for Slice
 impl<T: Ord> BinarySearchable<T> for [T] {
     fn lower_bound(&self, x: &T) -> usize {
-        let mut left = 0;
-        let mut right = self.len();
+        let mut lower = 0;
+        let mut upper = self.len();
 
-        while left != right {
-            let mid = (left + right) / 2;
+        while lower != upper {
+            let mid = (lower + upper) / 2;
             match self[mid].cmp(x) {
                 std::cmp::Ordering::Less => {
-                    left = mid + 1;
+                    lower = mid + 1;
                 }
                 std::cmp::Ordering::Equal | std::cmp::Ordering::Greater => {
-                    right = mid;
+                    upper = mid;
                 }
             }
         }
-        left
+        lower
     }
 
     fn upper_bound(&self, x: &T) -> usize {
-        let mut left = 0;
-        let mut right = self.len();
+        let mut lower = 0;
+        let mut upper = self.len();
 
-        while left != right {
-            let mid = (left + right) / 2;
+        while lower != upper {
+            let mid = (lower + upper) / 2;
             match self[mid].cmp(x) {
                 std::cmp::Ordering::Less | std::cmp::Ordering::Equal => {
-                    left = mid + 1;
+                    lower = mid + 1;
                 }
                 std::cmp::Ordering::Greater => {
-                    right = mid;
+                    upper = mid;
                 }
             }
         }
-        left
+        lower
     }
 }
 
