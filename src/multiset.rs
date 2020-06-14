@@ -1,35 +1,39 @@
-use crate::binary_search::BinarySearchable;
-
+#[derive(Clone, Debug)]
 pub struct MultiSet<T> {
-    data: Vec<T>,
+    data: std::collections::BTreeMap<T, usize>,
 }
 
 impl<T: std::cmp::Ord> MultiSet<T> {
     pub fn new() -> Self {
-        Self { data: Vec::new() }
+        Self {
+            data: std::collections::BTreeMap::new(),
+        }
     }
 
-    pub fn push(&mut self, i: T) {
-        let idx = self.data.lower_bound(&i);
-        self.data.insert(idx, i);
+    pub fn push(&mut self, v: T) {
+        *self.data.entry(v).or_insert(0) += 1;
     }
 
-    pub fn remove(&mut self, i: T) -> Result<(), ()> {
-        match self.data.binary_search(&i) {
-            Ok(idx) => {
-                self.data.remove(idx);
+    pub fn remove(&mut self, v: T) -> Result<(), ()> {
+        match self.data.get_mut(&v) {
+            Some(i) => {
+                if *i == 1 {
+                    self.data.remove(&v).unwrap();
+                } else {
+                    *i -= 1;
+                }
                 Ok(())
             }
-            Err(_) => Err(()),
+            None => Err(()),
         }
     }
 
     pub fn max(&self) -> Option<&T> {
-        self.data.iter().rev().next()
+        self.data.iter().rev().next().map(|(k, _)| k)
     }
 
     pub fn min(&self) -> Option<&T> {
-        self.data.iter().next()
+        self.data.iter().next().map(|(k, _)| k)
     }
 
     pub fn len(&self) -> usize {
