@@ -32,16 +32,20 @@ impl Precalc {
 
         Self { inv, fact, ifact }
     }
+
     pub fn inv(&self, n: usize) -> Mint {
         assert!(n > 0);
         self.inv[n]
     }
+
     pub fn fact(&self, n: usize) -> Mint {
         self.fact[n]
     }
+
     pub fn ifact(&self, n: usize) -> Mint {
         self.ifact[n]
     }
+
     pub fn comb(&self, n: usize, k: usize) -> Mint {
         if k > n {
             return Mint::new(0);
