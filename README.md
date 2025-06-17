@@ -4,8 +4,8 @@ Rust library for competitive programming
 
 ![Rust](https://github.com/furuhama/competitive/workflows/Rust/badge.svg)
 
-### versions
+### Versions
 
-Rust: 1.42.0
+Rust: 1.70.0
 
-dependency libraries and their versions are compatible to AtCoder Rust
+Dependency libraries and their versions are compatible with AtCoder Rust.
